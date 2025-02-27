@@ -1,8 +1,8 @@
 # Benchmarking Calorimeter Shower Simulation using Generative AI
 
-In this project we are comparing 4 different Generative AI models on Calorimeter Shower Simulation. This project is inspired by [CaloChallenge 2022](https://calochallenge.github.io/homepage/).
+In this work we propose a set of benmarking tools for comparing various Generative AI models for Calorimeter Shower Simulation. This project is inspired by [CaloChallenge 2022](https://calochallenge.github.io/homepage/).
 
-## Dataset
+## Datasets
 
 - Dataset 1 available at [Dataset 1](https://zenodo.org/records/8099322).
 - Dataset 2 available at [Dataset 2](https://zenodo.org/records/6366271).
@@ -12,8 +12,7 @@ We will upload our samples for dataset 1 and 3 soon.
 
 ## Generative AI models
 
-Here we compare 4 different Generative AI models.
-They are 
+Here we compare 4 different Generative AI models, listed below.
 1. CaloDream on dataset 2 and 3 (Conditional Flow Matching)https://github.com/luigifvr/calo_dreamer
 2. CaloDiffusion (Denoising Diffusion based model) https://github.com/OzAmram/CaloDiffusionPaper/tree/main
 3. CaloScore (Score based model) https://github.com/ViniciusMikuni/CaloScoreV2/tree/main
@@ -26,8 +25,7 @@ They are
 - We will upload our trained models to Zenodo soon.
   
 ## List of Metrics
-Below are the list of metrics to compare the performance of various models. For a detailed explanation of the metrics and how to compare, please 
-refer to our paper https://arxiv.org/pdf/2406.12898
+Below are the list of metrics used to compare the performance of various Generative AI models. For a detailed explanation of the metrics and how they can be used to compare various models, please refer to our paper https://arxiv.org/pdf/2406.12898
 
 1. Histograms of physics observables
    - Layer wise energy distribution
@@ -87,6 +85,7 @@ python evaluate.py --metrics 'all' --binning_file 'xml_binning_files/file_name' 
 # Dataset 2 and 3:
 python evaluate.py --metrics 'all' --binning_file 'xml_binning_files/file_name' --dataset_path 'path_to_dataset_path' --dataset_num '[2, 3]' --particle_type 'electron' --row 3 --col 3
 ```
+
 2. To generate FPD and KPD scores, run the following commands:
 ```
 python evaluate.py --metrics ‘fpd-kpd’ --binning_file ‘path_to_binning_file’ --dataset_path ‘path_to_dataset_path’ --dataset_num 'dataset_num' --particle_type ‘electron’ 
