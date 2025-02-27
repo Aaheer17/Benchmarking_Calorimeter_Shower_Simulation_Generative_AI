@@ -56,3 +56,14 @@ source eval/bin/activate
 pip install -r requirements.txt
 
 ```
+## Evaluation Script Parameters
+The following table lists the required parameters for running the evaluation script along with their usage:
+
+| Parameters    | Usage |
+|:------------:|:------|
+| dataset_path | Path to the folder that contains samples from different models and Geant4. Files are saved in a pattern of `dataset_NUM_PARTICLE_MODEL.h5`. |
+| metrics      | Options: `all`, `fpd-kpd`, `CFD`. |
+| dataset_num  | Type of dataset: `1`, `2`, or `3`. |
+| output_dir   | Path to the directory to save results. |
+| binning_file | Path to the binning file. |
+| particle_type | Type of the particle being evaluated, e.g., `photon`, `pion`, `electron`. |
