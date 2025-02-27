@@ -1,1 +1,1 @@
-# -Benchmarking_Calorimeter_Shower_Simulation_Generative_AI
+# Benchmarking Calorimeter Shower Simulation using Generative AI
