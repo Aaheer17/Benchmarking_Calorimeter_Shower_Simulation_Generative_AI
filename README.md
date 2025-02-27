@@ -54,7 +54,6 @@ A suitable python environment named eval can be created and activated with:
 python -m venv eval
 source eval/bin/activate
 pip install -r requirements.txt
-
 ```
 ## Evaluation Script Parameters
 The following table lists the required parameters for running the evaluation script along with their usage:
@@ -67,3 +66,38 @@ The following table lists the required parameters for running the evaluation scr
 | output_dir   | Path to the directory to save results. |
 | binning_file | Path to the binning file. |
 | particle_type | Type of the particle being evaluated, e.g., `photon`, `pion`, `electron`. |
+
+The metric option `all` will cover all of the metrics described above.
+
+The metric **CFD** stands for **Correlation Frobenius Distance**, which is one of our contributions. This metric measures how the consecutive layers and voxels of generated samples are correlated with each other compared to Geant4 samples.
+
+CFD helps evaluate the consistency of energy deposition patterns across layers, capturing the spatial correlations in the calorimeter shower. Lower CFD values indicate that the generated samples better preserve the correlations observed in Geant4 simulations. Our current implemention is for dataset 2 and 3. It can be easily modified for dataset 1.
+
+## Running the evaluation scripts
+
+1. To generate Sparsity, Center of Energy, Shower width, voxel distribution, mean energy, and E_ratio plots, run the following commands:
+
+```
+# Dataset 1(photon)
+python evaluate.py --metrics 'all' --binning_file 'xml_binning_files/file_name' --dataset_path 'path_to_dataset_path' --dataset_num 1 --particle_type 'photon' --row 1 --col 2
+
+# Dataset 1 (pion):
+python evaluate.py --metrics 'all' --binning_file 'xml_binning_files/file_name' --dataset_path 'path_to_dataset_path' --dataset_num 1 --particle_type 'pion' --row 2 --col 2
+
+# Dataset 2 and 3:
+python evaluate.py --metrics 'all' --binning_file 'xml_binning_files/file_name' --dataset_path 'path_to_dataset_path' --dataset_num '[2, 3]' --particle_type 'electron' --row 3 --col 3
+```
+2. To generate FPD and KPD scores, run the following commands:
+```
+python evaluate.py --metrics ‘fpd-kpd’ --binning_file ‘path_to_binning_file’ --dataset_path ‘path_to_dataset_path’ --dataset_num 'dataset_num' --particle_type ‘electron’ 
+```
+
+3. To generate correlation plots , run the following command:
+```
+python evaluate.py --metrics ‘CFD’ --binning_file ‘path_to_binning_file’ --dataset_path ‘path_to_dataset_path’ --dataset_num 'dataset_num' --particle_type ‘electron’ 
+```
+
+4. To generate AUC and JSD scores, run the following command:
+```
+python classifier_auc_jsd.py --input_file 'path_to_input_file' --reference_file 'path_to_reference_file' --dataset_num '[1-photons, 1-pions, 2, 3]' --mode '[cls-low, clow-low-normed, cls-high]' --binning_file 'xml_binning_files/file_name'
+```
