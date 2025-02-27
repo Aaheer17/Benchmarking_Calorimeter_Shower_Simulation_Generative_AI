@@ -1,0 +1,10 @@
+numpy
+h5py
+matplotlib
+scipy
+seaborn
+jetnet
+configargparse
+pandas
+torch
+scikit-learn
