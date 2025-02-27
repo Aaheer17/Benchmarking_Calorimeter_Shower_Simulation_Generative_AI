@@ -3,10 +3,11 @@
 In this project we are comparing 4 different Generative AI models on Calorimeter Shower Simulation. This project is inspired by [CaloChallenge 2022](https://calochallenge.github.io/homepage/).
 
 ## Dataset
--Dataset 1 available at [Dataset 1](https://zenodo.org/records/8099322)
--Dataset 2 available at [Dataset 2](https://zenodo.org/records/6366271)
--Dataset 3 available at [Dataset 3](https://zenodo.org/records/6366324)
--You can access our generated samples here: [Dataset 2 Samples on Zenodo](https://zenodo.org/records/14883798).
+
+- Dataset 1 available at [Dataset 1](https://zenodo.org/records/8099322).
+- Dataset 2 available at [Dataset 2](https://zenodo.org/records/6366271).
+- Dataset 3 available at [Dataset 3](https://zenodo.org/records/6366324).
+- You can access our generated samples here: [Dataset 2 Samples on Zenodo](https://zenodo.org/records/14883798).
 We will upload our samples for dataset 1 and 3 soon. 
 
 ## Generative AI models
