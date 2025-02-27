@@ -71,7 +71,7 @@ The metric option `all` will cover all of the metrics described above.
 
 The metric **CFD** stands for **Correlation Frobenius Distance**, which is one of our contributions. This metric measures how the consecutive layers and voxels of generated samples are correlated with each other compared to Geant4 samples.
 
-CFD helps evaluate the consistency of energy deposition patterns across layers, capturing the spatial correlations in the calorimeter shower. Lower CFD values indicate that the generated samples better preserve the correlations observed in Geant4 simulations. Our current implemention is for dataset 2 and 3. It can be easily modified for dataset 1.
+CFD helps evaluate the consistency of energy deposition patterns across layers, capturing the spatial correlations in the calorimeter shower. Lower CFD values indicate that the generated samples better preserve the correlations observed in Geant4 simulations. Our current implemention is for dataset 2 and 3. It can easily be modified for dataset 1.
 
 ## Running the evaluation scripts
 
