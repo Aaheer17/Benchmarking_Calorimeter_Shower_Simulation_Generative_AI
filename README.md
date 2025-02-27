@@ -101,3 +101,5 @@ python evaluate.py --metrics ‘CFD’ --binning_file ‘path_to_binning_file’
 ```
 python classifier_auc_jsd.py --input_file 'path_to_input_file' --reference_file 'path_to_reference_file' --dataset_num '[1-photons, 1-pions, 2, 3]' --mode '[cls-low, clow-low-normed, cls-high]' --binning_file 'xml_binning_files/file_name'
 ```
+
+Note: The samples in a given folder are saved with specific naming convension. Specifically, dataset_n_particle_model.h5, where n stands for the dataset number, partcile stands for type of particle, e.g., electron, and model stands for CaloDiffusion, CaloScore, CaloINN or Geant4. In our evaluation scripts, we assume the saved samples follow this naming convension and based on that we read from the path. For better understanding please refere to [Dataset 2 Samples on Zenodo](https://zenodo.org/records/14883798). 
