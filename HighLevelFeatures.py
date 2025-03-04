@@ -15,19 +15,19 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.colors import LogNorm as LN
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-
-
 from XMLHandler import XMLHandler
 
 class HighLevelFeatures:
     """ Computes all high-level features based on the specific geometry stored in the binning file
     """
+
     def __init__(self, particle, filename='binning.xml'):
         """ particle (str): particle to be considered
             filename (str): path/to/binning.xml of the specific detector geometry.
             particle is redundant, as it is also part of the binning file, however, it serves as a
             crosscheck to ensure the correct binning is used.
         """
+
         xml = XMLHandler(particle, filename=filename)
         self.bin_edges = xml.GetBinEdges()
         self.eta_all_layers, self.phi_all_layers = xml.GetEtaPhiAllLayers()
@@ -43,7 +43,7 @@ class HighLevelFeatures:
         self.width_etas = {}
         self.width_phis = {}
         self.sparsity = {}
-        self.g_sparsity={}  #group of layer sparsity
+        self.g_sparsity = {}  #group of layer sparsity
         self.particle = particle
         self.colors = cm.gnuplot2(np.linspace(0.2, 0.8, 3))
         if self.particle == 'photon':
@@ -69,6 +69,7 @@ class HighLevelFeatures:
 
     def GetECandWidths(self, eta_layer, phi_layer, energy_layer):
         """ Computes center of energy in eta and phi as well as their widths """
+
         eta_EC, phi_EC = self._calculate_EC(eta_layer, phi_layer, energy_layer)
         eta_width, phi_width = self._calculate_Widths(eta_layer, phi_layer, energy_layer)
         # The following checks are needed to assure a positive argument to the sqrt,
@@ -79,11 +80,13 @@ class HighLevelFeatures:
 
     def _calculate_sparsity(self, layer_data):
         """ Computes the sparsity of the given layer"""
+
         #print("layer_data.shape: ",layer_data.shape)
         return (layer_data > 0).mean(axis=1)
 
     def CalculateFeatures(self, data):
         """ Computes all high-level features for the given data """
+
         #print("Hello!")
         self.E_tot = data.sum(axis=-1)
 
@@ -107,6 +110,7 @@ class HighLevelFeatures:
     def _DrawSingleLayer(self, data, layer_nr, filename, title=None, fig=None, subplot=(1, 1, 1),
                          vmax=None, colbar='alone'):
         """ draws the shower in layer_nr only """
+
         if fig is None:
             fig = plt.figure(figsize=(2, 2), dpi=200)
         num_splits = 400
@@ -161,6 +165,7 @@ class HighLevelFeatures:
 
     def _DrawShower(self, data, filename, title):
         """ Draws the shower in all layers """
+
         if self.particle == 'electron':
             figsize = (10, 20)
         else:
