@@ -11,7 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
 def plot_layer_comparison(hlf_class, data, reference_class, reference_data, arg, show=False):
     """ plots showers of of data and reference next to each other, for comparison """
     num_layer = len(reference_class.relevantLayers)
@@ -44,7 +43,7 @@ def plot_Etot_Einc_discrete(hlf_class, reference_class, arg):
     # hardcode boundaries?
     bins = np.linspace(0.4, 1.4, 21)
     plt.figure(figsize=(10, 10))
-    target_energies = 2**np.linspace(8, 23, 16)
+    target_energies = 2 ** np.linspace(8, 23, 16)
     for i in range(len(target_energies)-1):
         if i > 3 and 'photons' in arg.dataset:
             bins = np.linspace(0.9, 1.1, 21)
@@ -129,8 +128,6 @@ def plot_E_group_layers(hlf_class, reference_class,arg):
     
     keys = [[i+j for j in range(5)] for i in range(0, 45, 5)]
 
-    
-    
     for key in keys:
         shape_a=reference_class.GetElayers()[0].shape[0]
         selected_ref = [reference_class.GetElayers()[i].reshape(shape_a,1)/1000 for i in key]#turning into GeV
@@ -139,8 +136,8 @@ def plot_E_group_layers(hlf_class, reference_class,arg):
         mean_ref = np.mean(combined_ref, axis=1, keepdims=True) 
         #print("mean_ref",mean_ref.shape)
         #print(hlf_class.GetElayers().keys())
-        shape_b=hlf_class.GetElayers()[0].shape[0]
-        selected_hlf=[hlf_class.GetElayers()[i].reshape(shape_b,1)/1000 for i in key]#turning into GeV
+        shape_b = hlf_class.GetElayers()[0].shape[0]
+        selected_hlf = [hlf_class.GetElayers()[i].reshape(shape_b,1)/1000 for i in key]#turning into GeV
         combined_hlf = np.concatenate(selected_hlf, axis=1)
         #print("Shape of combined array:", combined_ref.shape)
         mean_hlf = np.mean(combined_hlf, axis=1, keepdims=True) 
@@ -153,8 +150,6 @@ def plot_E_group_layers(hlf_class, reference_class,arg):
                                40)
         else:
             bins = 40
-            
-            
             
         counts_ref, bins, _ = plt.hist(mean_ref, bins=bins,
                                        label='Geant4', density=True, histtype='step',
@@ -185,9 +180,9 @@ def plot_E_group_layers(hlf_class, reference_class,arg):
         plt.close()
 
     
-
 def plot_E_layers(hlf_class, reference_class, arg):
     """ plots energy deposited in each layer """
+
     for key in hlf_class.GetElayers().keys():
         plt.figure(figsize=(6, 6))
         #x_scale=='log'
@@ -228,6 +223,7 @@ def plot_E_layers(hlf_class, reference_class, arg):
 
 def plot_ECEtas(hlf_class, reference_class, arg):
     """ plots center of energy in eta """
+
     for key in hlf_class.GetECEtas().keys():
         if arg.dataset in ['2', '3']:
             lim = (-30., 30.)
@@ -266,6 +262,7 @@ def plot_ECEtas(hlf_class, reference_class, arg):
 
 def plot_ECPhis(hlf_class, reference_class, arg):
     """ plots center of energy in phi """
+
     for key in hlf_class.GetECPhis().keys():
         if arg.dataset in ['2', '3']:
             lim = (-30., 30.)
@@ -304,6 +301,7 @@ def plot_ECPhis(hlf_class, reference_class, arg):
 
 def plot_ECWidthEtas(hlf_class, reference_class, arg):
     """ plots width of center of energy in eta """
+
     for key in hlf_class.GetWidthEtas().keys():
         if arg.dataset in ['2', '3']:
             lim = (0., 30.)
@@ -342,6 +340,7 @@ def plot_ECWidthEtas(hlf_class, reference_class, arg):
 
 def plot_ECWidthPhis(hlf_class, reference_class, arg):
     """ plots width of center of energy in phi """
+
     for key in hlf_class.GetWidthPhis().keys():
         if arg.dataset in ['2', '3']:
             lim = (0., 30.)
@@ -380,6 +379,7 @@ def plot_ECWidthPhis(hlf_class, reference_class, arg):
 
 def plot_cell_dist(shower_arr, ref_shower_arr, arg):
     """ plots voxel energies across all layers """
+
     plt.figure(figsize=(6, 6))
     if arg.x_scale == 'log':
         bins = np.logspace(np.log10(arg.min_energy),
@@ -421,6 +421,7 @@ def _separation_power(hist1, hist2, bins):
         Note: the definition requires Sum (hist_i) = 1, so if hist1 and hist2 come from
         plt.hist(..., density=True), we need to multiply hist_i by the bin widhts
     """
+
     hist1, hist2 = hist1*np.diff(bins), hist2*np.diff(bins)
     ret = (hist1 - hist2)**2
     ret /= hist1 + hist2 + 1e-16
