@@ -50,14 +50,11 @@ import HighLevelFeatures as HLF
 
 from evaluate_plotting_helper import *
 
-
 plt.rc('text', usetex=True)
 plt.rc('text.latex', preamble=r'\usepackage{amsmath,amssymb}')
 plt.rc('font', family='serif')
 
-
 ########## Parser Setup ##########
-
 parser = argparse.ArgumentParser(description=('Evaluate calorimeter showers of the '+\
                                               'Fast Calorimeter Challenge 2022.'))
 
@@ -86,12 +83,6 @@ parser.add_argument('--dataset', '-d', choices=['1-photons', '1-pions', '2', '3'
 parser.add_argument('--output_dir', default='results/',
                     help='Where to store evaluation output files (plots and scores).')
 parser.add_argument('--binning_file', help='Path to .xml binning file.')
-
-#parser.add_argument('--source_dir', default='source/',
-#                    help='Folder that contains (soft links to) files required for'+\
-#                    ' comparative evaluations (high level features stored in .pkl or '+\
-#                   'datasets prepared for classifier runs.).')
-
 
 # classifier options
 
@@ -471,8 +462,6 @@ if __name__ == '__main__':
     args.x_scale = 'log'
     
 
-    
-
     # evaluations:
     if args.mode in ['all', 'avg']:
         print("Plotting average shower next to reference...")
@@ -639,6 +628,3 @@ if __name__ == '__main__':
             f.write('Final result of classifier test (AUC / JSD):\n'+\
                     '{} {:.4f} / {:.4f}\n\n'.format(model_name, eval_auc, eval_JSD))
 
-
-
-    #todo: sparsity

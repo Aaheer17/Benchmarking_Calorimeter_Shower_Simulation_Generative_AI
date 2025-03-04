@@ -5,7 +5,6 @@ https://github.com/CaloChallenge/homepage/blob/main/code/
 
 """
 
-
 import numpy as np
 import h5py
 import matplotlib.pyplot as plt
@@ -83,21 +82,19 @@ def plot_sep_emd(filename, output_dir, dataset, particle, model_to_color_dict, w
     fig.savefig(save_path)
     print(f"Plot saved to {save_path}")
 
-   
     
-def plot_cell_dist(shower_arr,min_energy,dataset,output_dir, particle,model_names, model_to_color_dict, width=8,height=5,TITLE_SIZE=30
-                   ,XLABEL_SIZE=25,YLABEL_SIZE=25,YMAX=1,ratio = False,LEGEND_SIZE=24,XTICK_SIZE=30,YTICK_SIZE=30):
+def plot_cell_dist(shower_arr, min_energy, dataset, output_dir, particle, model_names, model_to_color_dict, width=8, height=5, TITLE_SIZE=30,
+                   XLABEL_SIZE=25, YLABEL_SIZE=25, YMAX=1, ratio=False, LEGEND_SIZE=24, XTICK_SIZE=30, YTICK_SIZE=30):
     """ plots voxel energies across all layers """
-    x_scale='log'
-    EMDs={}
-    Seps={}
-    legend_names=['Geant4']
+    x_scale = 'log'
+    EMDs = {}
+    Seps = {}
+    legend_names = ['Geant4']
     g_index=model_names.index('Geant4')
-    ref_shower_arr=shower_arr[g_index] # trying to convert to GeV
-    fig0, ax0 = plt.subplots(1,1,figsize=(width*1,height*1),sharex=True,sharey=True)
+    ref_shower_arr = shower_arr[g_index] # trying to convert to GeV
+    fig0, ax0 = plt.subplots(1, 1, figsize=(width*1, height*1), sharex=True, sharey=True)
     
     
-
     if x_scale == 'log':
         bins = np.logspace(np.log10(min_energy),
                            np.log10(ref_shower_arr.max()),
@@ -126,8 +123,8 @@ def plot_cell_dist(shower_arr,min_energy,dataset,output_dir, particle,model_name
         seps = separation_power(counts_ref, counts_data, bins)
         Seps[model_names[j]]=seps
 
-        ax0.set_ylabel('A.U.',fontsize=YLABEL_SIZE)
-        ax0.set_ylim([None,YMAX])
+        ax0.set_ylabel('A.U.', fontsize=YLABEL_SIZE)
+        ax0.set_ylim([None, YMAX])
         #ax0.set_yscale('log')
         ax0.margins(0.05, 0.5)
         ax0.tick_params(axis='x', labelsize=XTICK_SIZE)
@@ -142,32 +139,32 @@ def plot_cell_dist(shower_arr,min_energy,dataset,output_dir, particle,model_name
     lines_labels = [ax.get_legend_handles_labels() for ax in fig0.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
     #fig0.legend(lines, labels, loc='upper center',ncol = 4,fontsize=LEGEND_SIZE,bbox_to_anchor=[0.55, 1.02]) #for positioning figure
-    fig0.legend(legend_names[:len(model_names)],fontsize=LEGEND_SIZE,loc='upper center', bbox_to_anchor=[0.5, 1.06],ncol=4,
-               borderpad=0.1,labelspacing=0.1,handlelength=1.0,handleheight=0.5,
-               handletextpad=0.2,borderaxespad=0.2,columnspacing=0.2)
-    filename0 = os.path.join(output_dir, 'E_voxel_dataset_{}_particle_{}.pdf'.format( str(dataset),particle))
-    fig0.savefig(filename0, dpi=350,bbox_inches='tight')
-    emd_file=os.path.join(output_dir,"emd_E_voxel_dataset_{}_particle_{}.txt".format(str(dataset),particle))
-    write_dict_to_txt(EMDs,emd_file)
-    sep_file=os.path.join(output_dir,"separation_E_voxel_dataset_{}_particle_{}.txt".format(str(dataset),particle))
-    write_dict_to_txt(Seps,sep_file)
+    fig0.legend(legend_names[:len(model_names)], fontsize=LEGEND_SIZE, loc='upper center', bbox_to_anchor=[0.5, 1.06], ncol=4,
+               borderpad=0.1, labelspacing=0.1, handlelength=1.0, handleheight=0.5,
+               handletextpad=0.2, borderaxespad=0.2, columnspacing=0.2)
+
+    filename0 = os.path.join(output_dir, 'E_voxel_dataset_{}_particle_{}.pdf'.format( str(dataset), particle))
+    fig0.savefig(filename0, dpi=350, bbox_inches='tight')
+    emd_file = os.path.join(output_dir, "emd_E_voxel_dataset_{}_particle_{}.txt".format(str(dataset), particle))
+    write_dict_to_txt(EMDs, emd_file)
+    sep_file = os.path.join(output_dir, "separation_E_voxel_dataset_{}_particle_{}.txt".format(str(dataset), particle))
+    write_dict_to_txt(Seps, sep_file)
     plt.close()
 
     
-    
-def plot_Etot_Einc_new(HLFs,dataset,output_dir, particle, model_names, model_to_color_dict, ratio = False,row=1,col=1,height=6,width=8,YMAX=100,
-                   LEGEND_SIZE=24,XLABEL_SIZE=36,YLABEL_SIZE=36,TITLE_SIZE=48,XTICK_SIZE=30,YTICK_SIZE=30):
+def plot_Etot_Einc_new(HLFs, dataset, output_dir, particle, model_names, model_to_color_dict, ratio=False, row=1, col=1, height=6, width=8, YMAX=100,
+                   LEGEND_SIZE=24, XLABEL_SIZE=36, YLABEL_SIZE=36, TITLE_SIZE=48, XTICK_SIZE=30, YTICK_SIZE=30):
     """ plots Etot normalized to Einc histogram """
-    EMDs={}
-    Seps={}
-    fig0, ax0 = plt.subplots(row,col,figsize=(width*col,height*row),sharex=True,sharey=True)
+    EMDs = {}
+    Seps = {}
+    fig0, ax0 = plt.subplots(row, col, figsize=(width*col, height*row), sharex=True, sharey=True)
     # if("pion" in dataset):
     #     xmin, xmax = (0., 2.0)
     # else:
-    legend_names=['Geant4']
+    legend_names = ['Geant4']
     xmin, xmax = (0.5, 1.5)
-    g_index=model_names.index('Geant4')
-    reference_class=HLFs[g_index]
+    g_index = model_names.index('Geant4')
+    reference_class = HLFs[g_index]
     bins = np.linspace(xmin, xmax, 101)
   
 
@@ -182,51 +179,51 @@ def plot_Etot_Einc_new(HLFs,dataset,output_dir, particle, model_names, model_to_
         counts_data, _, _ = ax0.hist(HLFs[j].GetEtot() / HLFs[j].Einc.squeeze(), bins=bins,color =model_to_color_dict[model_names[j]] ,
                                      label=model_names[j], histtype='step', linewidth=3., alpha=0.8,
                                      density=True)
-        emd_score=get_emd(counts_ref,counts_data)
-        EMDs[model_names[j]]=emd_score
+        emd_score=get_emd(counts_ref, counts_data)
+        EMDs[model_names[j]] = emd_score
         
         seps=separation_power(counts_ref,counts_data,bins)
         Seps[model_names[j]]=seps
 
-        ax0.set_ylabel('A.U.',fontsize=YLABEL_SIZE)
+        ax0.set_ylabel('A.U.', fontsize=YLABEL_SIZE)
         #ax0.set_xlabel(r"$E_{total}/E_{inc}$",fontsize=XLABEL_SIZE)
 
-        ax0.set_ylim([None,YMAX])
+        ax0.set_ylim([None, YMAX])
         #ax0.set_yscale('log')
         ax0.margins(0.05, 0.5) 
         ax0.tick_params(axis='x', labelsize=XTICK_SIZE)
         ax0.tick_params(axis='y', labelsize=YTICK_SIZE)
-    plt_label = "$E_{ratio}$ for Dataset "+str(dataset)
+    plt_label = "$E_{ratio}$ for Dataset " + str(dataset)
     #fig0.suptitle(plt_label,y=1.1,fontsize=TITLE_SIZE) # for positioning title
     fig0.tight_layout()
     lines_labels = [ax.get_legend_handles_labels() for ax in fig0.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
     #fig0.legend(legend_names[:3], loc='upper center',ncol = 4,fontsize=LEGEND_SIZE,bbox_to_anchor=[0.5, 1.02]) #for positioning figure
-    fig0.legend(legend_names[:len(model_names)],fontsize=LEGEND_SIZE,loc='upper center', bbox_to_anchor=[0.5, 1.06],ncol=4,
-               borderpad=0.1,labelspacing=0.1,handlelength=1.0,handleheight=0.5,
-               handletextpad=0.2,borderaxespad=0.2,columnspacing=0.2)
+    fig0.legend(legend_names[:len(model_names)], fontsize=LEGEND_SIZE, loc='upper center', bbox_to_anchor=[0.5, 1.06], ncol=4,
+               borderpad=0.1, labelspacing=0.1, handlelength=1.0, handleheight=0.5,
+               handletextpad=0.2, borderaxespad=0.2, columnspacing=0.2)
     filename0 = os.path.join(output_dir, 'E_ratio_dataset_{}_particle_{}.pdf'.format( str(dataset),particle))
-    fig0.savefig(filename0, dpi=350,bbox_inches='tight')
+    fig0.savefig(filename0, dpi=350, bbox_inches='tight')
 
 
-    emd_file=os.path.join(output_dir,"emd_E_ratio_dataset_{}_particle_{}.txt".format( str(dataset),particle))
-    write_dict_to_txt(EMDs,emd_file)
-    sep_file=os.path.join(output_dir,"separation_E_ratio_dataset_{}_particle_{}.txt".format( str(dataset),particle))
+    emd_file = os.path.join(output_dir, "emd_E_ratio_dataset_{}_particle_{}.txt".format(str(dataset), particle))
+    write_dict_to_txt(EMDs, emd_file)
+    sep_file = os.path.join(output_dir, "separation_E_ratio_dataset_{}_particle_{}.txt".format(str(dataset), particle))
     write_dict_to_txt(Seps,sep_file)
     plt.close()
 
             
-def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, model_to_color_dict, ratio = False,row=3,col=3,height=6,width=8,YMAX=100,
-                   LEGEND_SIZE=24,XLABEL_SIZE=36,YLABEL_SIZE=36,TITLE_SIZE=48,XTICK_SIZE=30,YTICK_SIZE=30):
-    fig0, ax0 = plt.subplots(row,col,figsize=(width*col,height*row),sharex=True,sharey=False)
+def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, model_to_color_dict, ratio=False, row=3, col=3, height=6, width=8, YMAX=100,
+                   LEGEND_SIZE=24, XLABEL_SIZE=36, YLABEL_SIZE=36, TITLE_SIZE=48, XTICK_SIZE=30, YTICK_SIZE=30):
+    fig0, ax0 = plt.subplots(row, col, figsize=(width*col, height*row), sharex=True, sharey=False)
     """
         generates plots of sparsity distribution for dataset 2 and 3.
     """
-    EMDs={}
-    Seps={}
+    EMDs = {}
+    Seps = {}
     gkeys = [[i+j for j in range(5)] for i in range(0, 45, 5)]
-    dataset=str(dataset)
-    legend_names=['Geant4']
+    dataset = str(dataset)
+    legend_names = ['Geant4']
     for out_idx,keys in enumerate(gkeys):
        
         if dataset in ['2', '3']:
@@ -236,14 +233,13 @@ def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, mo
 
         bins = np.linspace(*lim, 101)
         
-        g_index=model_names.index('Geant4')
+        g_index = model_names.index('Geant4')
         
-        reference_class=list_hlfs[g_index]
+        reference_class = list_hlfs[g_index]
         
-        
-        shape_a=reference_class.GetSparsity()[0].shape[0]
+        shape_a = reference_class.GetSparsity()[0].shape[0]
 
-        selected_ref = [(1-reference_class.GetSparsity()[i]).reshape(shape_a,1) for i in keys]#turning into GeV
+        selected_ref = [(1-reference_class.GetSparsity()[i]).reshape(shape_a, 1) for i in keys]#turning into GeV
         combined_ref = np.concatenate(selected_ref, axis=1)
 
         mean_ref = np.mean(combined_ref, axis=1, keepdims=True)
@@ -261,9 +257,9 @@ def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, mo
             else:
                 legend_names.append(model_names[i])
                 
-                shape_a=reference_class.GetSparsity()[0].shape[0]
+                shape_a = reference_class.GetSparsity()[0].shape[0]
 
-                selected_ref = [(1-list_hlfs[i].GetSparsity()[j]).reshape(shape_a,1) for j in keys]#turning into GeV
+                selected_ref = [(1-list_hlfs[i].GetSparsity()[j]).reshape(shape_a, 1) for j in keys]#turning into GeV
                 combined_ref = np.concatenate(selected_ref, axis=1)
 
                 mean_ref = np.mean(combined_ref, axis=1, keepdims=True)
@@ -271,18 +267,18 @@ def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, mo
                 
                 sub_label = model_names[i] if out_idx==0 else None
         
-                counts_data, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, label=sub_label, bins=bins, color =  model_to_color_dict[model_names[i]],
+                counts_data, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, label=sub_label, bins=bins, color=model_to_color_dict[model_names[i]],
                                              histtype='step', linewidth=2., alpha=0.8, density=True)
             
-                emd_score=get_emd(counts_ref,counts_data)
-                EMDs[model_names[i]+"_"+str(keys[0])+" to "+str(keys[4])]=emd_score
+                emd_score = get_emd(counts_ref, counts_data)
+                EMDs[model_names[i] + "_" + str(keys[0]) + " to " + str(keys[4])] = emd_score
 
                 seps = separation_power(counts_ref, counts_data, bins)
-                Seps[model_names[i]+"_"+str(keys[0])+" to "+str(keys[4])]=seps
+                Seps[model_names[i] + "_" + str(keys[0]) + " to " + str(keys[4])] = seps
                 
             cur_ylabel = "A.U." if out_idx%col==0 else ''
-            ax0[out_idx//col][out_idx%col].set_ylabel(cur_ylabel,fontsize=YLABEL_SIZE)
-            ax0[out_idx//col][out_idx%col].set_xlabel(r"Layer {} - {}".format(keys[0],keys[4]),fontsize=XLABEL_SIZE)
+            ax0[out_idx//col][out_idx%col].set_ylabel(cur_ylabel, fontsize=YLABEL_SIZE)
+            ax0[out_idx//col][out_idx%col].set_xlabel(r"Layer {} - {}".format(keys[0], keys[4]), fontsize=XLABEL_SIZE)
             #plt.xlabel(r'[mm]')
             #ax0[out_idx//col][out_idx%col].set_xlim(*lim)
             #ax0[out_idx//col][out_idx%col].set_ylim([0,YMAX])
@@ -300,21 +296,21 @@ def plot_sparsity_group(list_hlfs, dataset,output_dir, particle, model_names, mo
     
     lines_labels = [ax.get_legend_handles_labels() for ax in fig0.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    fig0.legend(legend_names[:3], loc='upper center',bbox_to_anchor=[0.55, 1.06],ncol=4,fontsize=LEGEND_SIZE,
-               borderpad=0.1,labelspacing=0.1,handlelength=1.0,handleheight=0.5,
-               handletextpad=0.2,borderaxespad=0.2,columnspacing=0.2) #for positioning figure
+    fig0.legend(legend_names[:3], loc='upper center', bbox_to_anchor=[0.55, 1.06], ncol=4, fontsize=LEGEND_SIZE,
+               borderpad=0.1, labelspacing=0.1, handlelength=1.0, handleheight=0.5,
+               handletextpad=0.2, borderaxespad=0.2, columnspacing=0.2) #for positioning figure
     
-    fig0.savefig(filename0, dpi=350,bbox_inches='tight')
+    fig0.savefig(filename0, dpi=350, bbox_inches='tight')
     
-    emd_file=os.path.join(output_dir,"emd_sparsity_dataset_{}_particle_{}.txt".format(str(dataset),particle))
+    emd_file = os.path.join(output_dir, "emd_sparsity_dataset_{}_particle_{}.txt".format(str(dataset), particle))
     write_dict_to_txt(EMDs,emd_file)
-    sep_file=os.path.join(output_dir,"separation_sparsity_dataset_{}.txt".format(str(dataset),particle))
+    sep_file = os.path.join(output_dir, "separation_sparsity_dataset_{}.txt".format(str(dataset), particle))
     write_dict_to_txt(Seps,sep_file)
     plt.close()
-    taskname='separation_power_sparsity'
-    plot_sep_emd(sep_file, output_dir, dataset, particle,model_to_color_dict,width=7,height=5,taskname=taskname)
-    taskname='emd_score_sparsity'
-    plot_sep_emd(emd_file, output_dir,dataset, particle,model_to_color_dict,width=7,height=5,taskname=taskname)
+    taskname = 'separation_power_sparsity'
+    plot_sep_emd(sep_file, output_dir, dataset, particle, model_to_color_dict, width=7, height=5, taskname=taskname)
+    taskname = 'emd_score_sparsity'
+    plot_sep_emd(emd_file, output_dir, dataset, particle, model_to_color_dict, width=7, height=5, taskname=taskname)
 
 
 def configure_subplot(ax, out_idx, key=None, keys=None, YLABEL_SIZE=12, XLABEL_SIZE=12, 
