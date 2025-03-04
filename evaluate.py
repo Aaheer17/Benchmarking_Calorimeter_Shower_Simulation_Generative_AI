@@ -113,9 +113,17 @@ def main():
     print("printing all arguments.....\n")
     print(args)
     
-    if not os.path.isdir(args.output_dir):
-        os.makedirs(args.output_dir)
-    
+    default_output_dir = 'results'
+    current_datetime = datetime.now()
+    current_time = current_datetime.strftime("%Y_%m_%d_%H_%M_%S")
+    save_output_dir = default_output_dir + '_' + str(current_time)
+ 
+    if os.path.isdir(default_output_dir):
+        os.rename(default_output_dir, save_output_dir)
+        os.mkdir(default_output_dir)
+    else:
+        os.mkdir(default_output_dir)
+ 
     if args.metrics == 'all':
          ## this returns incident energy, showers, HLFs object for each sample dataset and their order in the folder
         Es, Showers, HLFs, model_names, files = initialize_HLFs(args.dataset_path, args.particle_type, args.binning_file)
