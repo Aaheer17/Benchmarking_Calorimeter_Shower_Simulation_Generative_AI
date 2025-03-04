@@ -318,6 +318,7 @@ def configure_subplot(ax, out_idx, key=None, keys=None, YLABEL_SIZE=12, XLABEL_S
     """
     Configures a subplot with appropriate labels, scale, and appearance.
     """
+
     if keys:
         xlabel = f"Layer {keys[0]} - {keys[4]}"  # Use range format
     elif key is not None:
@@ -342,7 +343,6 @@ def configure_subplot(ax, out_idx, key=None, keys=None, YLABEL_SIZE=12, XLABEL_S
     subplot_ax.tick_params(axis='x', labelsize=XTICK_SIZE)
     subplot_ax.tick_params(axis='y', labelsize=YTICK_SIZE)
 
-    
 
 def plot_EC_group(list_hlfs, dataset, output_dir, particle, model_names,model_to_color_dict, mode='eta', ratio=False, row=3, col=3, height=6, width=8, YMAX=100,
                    LEGEND_SIZE=24, XLABEL_SIZE=36, YLABEL_SIZE=36, TITLE_SIZE=48, XTICK_SIZE=30, YTICK_SIZE=30):
@@ -395,7 +395,7 @@ def plot_EC_group(list_hlfs, dataset, output_dir, particle, model_names,model_to
             Seps[f"{model_names[i]}_{keys[0]} to {keys[4]}"] = seps
         
         configure_subplot(ax0, out_idx, None, keys, YLABEL_SIZE, XLABEL_SIZE, 
-                      YMAX, XTICK_SIZE, YTICK_SIZE, col,row)
+                      YMAX, XTICK_SIZE, YTICK_SIZE, col, row)
 
     fig0.tight_layout()
     fig0.legend(legend_names[:len(model_names)], fontsize=LEGEND_SIZE, loc='upper center', bbox_to_anchor=[0.5, 1.06],
@@ -405,7 +405,6 @@ def plot_EC_group(list_hlfs, dataset, output_dir, particle, model_names,model_to
     filename0 = os.path.join(output_dir, f'EC_{mode}_dataset_{dataset}_particle_{particle}.pdf')
     fig0.savefig(filename0, dpi=350, bbox_inches='tight')
 
-    
 
     emd_file = os.path.join(output_dir, f"emd_EC_{mode}_dataset_{dataset}_particle_{particle}.txt")
     write_dict_to_txt(EMDs, emd_file)
@@ -417,20 +416,21 @@ def plot_EC_group(list_hlfs, dataset, output_dir, particle, model_names,model_to
     plt.close()
 
     
-def plot_SW_group(list_hlfs, dataset,output_dir, particle,model_names, model_to_color_dict,mode='eta',                  ratio=False,row=3,col=3,height=6,width=8,YMAX=100,
-                   LEGEND_SIZE=24,XLABEL_SIZE=36,YLABEL_SIZE=36,TITLE_SIZE=48,XTICK_SIZE=30,YTICK_SIZE=30):
+def plot_SW_group(list_hlfs, dataset,output_dir, particle,model_names, model_to_color_dict,mode='eta',                  
+                   ratio=False, row=3, col=3, height=6, width=8, YMAX=100,
+                   LEGEND_SIZE=24, XLABEL_SIZE=36, YLABEL_SIZE=36, TITLE_SIZE=48, XTICK_SIZE=30, YTICK_SIZE=30):
     
     """ plots shower width in phi direction for dataset 2 and 3 """
     get_SW = lambda obj: obj.GetWidthEtas() if mode == 'eta' else obj.GetWidthPhis()
-    fig0, ax0 = plt.subplots(row,col,figsize=(width*col,height*row),sharex=True,sharey=True)
+    fig0, ax0 = plt.subplots(row, col, figsize=(width*col, height*row), sharex=True, sharey=True)
 
-    EMDs={}
-    Seps={}
-    legend_names=['Geant4']
+    EMDs = {}
+    Seps = {}
+    legend_names = ['Geant4']
     gkeys = [[i+j for j in range(5)] for i in range(0, 45, 5)]
-    dataset=str(dataset)
+    dataset = str(dataset)
     
-    for out_idx,keys in enumerate(gkeys):
+    for out_idx, keys in enumerate(gkeys):
         
         if dataset in ['2', '3']:
             lim = (0, 30.)
@@ -439,28 +439,28 @@ def plot_SW_group(list_hlfs, dataset,output_dir, particle,model_names, model_to_
 
         bins = np.linspace(*lim, 101)
         
-        g_index=model_names.index('Geant4')
+        g_index = model_names.index('Geant4')
        
-        reference_class=list_hlfs[g_index]
+        reference_class = list_hlfs[g_index]
 
         shape_a=get_SW(reference_class)[0].shape[0]
 
-        selected_ref = [get_SW(reference_class)[i].reshape(shape_a,1) for i in keys]#turning into GeV
+        selected_ref = [get_SW(reference_class)[i].reshape(shape_a, 1) for i in keys]#turning into GeV
         combined_ref = np.concatenate(selected_ref, axis=1)
         mean_ref = np.mean(combined_ref, axis=1, keepdims=True)
         main_label = model_names[g_index] if out_idx==0 else None
 
-        counts_ref, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, bins=bins,color = model_to_color_dict[model_names[g_index]],
+        counts_ref, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, bins=bins, color=model_to_color_dict[model_names[g_index]],
                                     label=main_label, density=True, histtype='step',
                                     alpha=1.0, linewidth=3.)
         
         for i, hlf in enumerate(list_hlfs):
-            if list_hlfs[i] == None or g_index==i:
+            if list_hlfs[i] == None or g_index == i:
                 pass
             else:
                 legend_names.append(model_names[i])
                
-                shape_a=get_SW(hlf)[0].shape[0]
+                shape_a = get_SW(hlf)[0].shape[0]
 
                 selected_ref = [get_SW(hlf)[j].reshape(shape_a,1) for j in keys]#turning into GeV
                 combined_ref = np.concatenate(selected_ref, axis=1)
@@ -468,38 +468,38 @@ def plot_SW_group(list_hlfs, dataset,output_dir, particle,model_names, model_to_
                 mean_ref = np.mean(combined_ref, axis=1, keepdims=True)
                 sub_label = model_names[i] if out_idx==0 else None
         
-                counts_data, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, label=sub_label, bins=bins, color =  model_to_color_dict[model_names[i]],
+                counts_data, _, _ = ax0[out_idx//col][out_idx%col].hist(mean_ref, label=sub_label, bins=bins, color=model_to_color_dict[model_names[i]],
                                              histtype='step', linewidth=2., alpha=0.8, density=True)
             
                 emd_score=get_emd(counts_ref,counts_data)
-                EMDs[model_names[i]+"_"+str(keys[0])+" to "+str(keys[4])]=emd_score
+                EMDs[model_names[i] + "_" + str(keys[0]) + " to " + str(keys[4])] = emd_score
 
                 seps = separation_power(counts_ref, counts_data, bins)
-                Seps[model_names[i]+"_"+str(keys[0])+" to "+str(keys[4])]=seps
+                Seps[model_names[i] + "_" + str(keys[0]) + " to " + str(keys[4])] = seps
 
             configure_subplot(ax0, out_idx, None, keys, YLABEL_SIZE, XLABEL_SIZE, 
-                      YMAX, XTICK_SIZE, YTICK_SIZE, col,row)
+                      YMAX, XTICK_SIZE, YTICK_SIZE, col, row)
             
     lines_labels = [ax.get_legend_handles_labels() for ax in fig0.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
     #fig0.legend(lines, labels, loc='upper center',ncol = 2,fontsize=LEGEND_SIZE,bbox_to_anchor=[0.5, 1.18]) #for positioning figure
-    fig0.legend(legend_names[:len(model_names)], fontsize=LEGEND_SIZE,loc='upper center', bbox_to_anchor=[0.5, 1.06],ncol=4,
-               borderpad=0.1,labelspacing=0.1,handlelength=1.0,handleheight=0.5,
-               handletextpad=0.2,borderaxespad=0.2,columnspacing=0.2)
+    fig0.legend(legend_names[:len(model_names)], fontsize=LEGEND_SIZE,loc='upper center', bbox_to_anchor=[0.5, 1.06], ncol=4,
+               borderpad=0.1, labelspacing=0.1, handlelength=1.0, handleheight=0.5,
+               handletextpad=0.2, borderaxespad=0.2, columnspacing=0.2)
     fig0.tight_layout()
     filename0 = os.path.join(output_dir, 'SW_{}_dataset_{}_particle_{}.pdf'.format(mode, dataset,particle))
     fig0.savefig(filename0, dpi=350, bbox_inches='tight')
     
     
-    emd_file=os.path.join(output_dir,"emd_SW_{}_dataset_{}_particle_{}.txt".format(mode,dataset,particle))
+    emd_file = os.path.join(output_dir, "emd_SW_{}_dataset_{}_particle_{}.txt".format(mode,dataset,particle))
     write_dict_to_txt(EMDs,emd_file)
-    sep_file=os.path.join(output_dir,"separation_SW_{}_dataset_{}_particle_{}.txt".format(mode,dataset,particle))
+    sep_file = os.path.join(output_dir, "separation_SW_{}_dataset_{}_particle_{}.txt".format(mode,dataset,particle))
     write_dict_to_txt(Seps,sep_file)
     plt.close()
-    taskname=f'separation_power_SW_{mode}'
-    plot_sep_emd(sep_file, output_dir, dataset, particle,model_to_color_dict,width=7,height=5,taskname=taskname)
-    taskname=f'emd_score_SW_{mode}'
-    plot_sep_emd(emd_file, output_dir, dataset, particle,model_to_color_dict,width=7,height=5,taskname=taskname)
+    taskname = f'separation_power_SW_{mode}'
+    plot_sep_emd(sep_file, output_dir, dataset, particle, model_to_color_dict, width=7, height=5, taskname=taskname)
+    taskname = f'emd_score_SW_{mode}'
+    plot_sep_emd(emd_file, output_dir, dataset, particle, model_to_color_dict, width=7, height=5, taskname=taskname)
     
     
 def plot_SW(list_hlfs, dataset, output_dir, particle, model_names, model_to_color_dict, direction='eta', ratio=False, row=1, col=2, height=6, width=8, YMAX=100,
@@ -536,7 +536,7 @@ def plot_SW(list_hlfs, dataset, output_dir, particle, model_names, model_to_colo
             lim = (0., 300.)
 
         bins = np.linspace(*lim, 101)
-        if particle=='photon':
+        if particle == 'photon':
             counts_ref, _, _ = ax0[out_idx].hist(get_width(reference_class)[key], bins=bins,
                                              color=model_to_color_dict[model_names[g_index]],
                                              label=model_names[g_index], density=True, histtype='step',
@@ -590,11 +590,11 @@ def plot_SW(list_hlfs, dataset, output_dir, particle, model_names, model_to_colo
     plt.close()
 
 
-
 def plot_EC(list_hlfs, dataset, output_dir, particle, model_names,model_to_color_dict, direction='eta', ratio=False,
             row=2, col=2, height=6, width=8, YMAX=100,
             LEGEND_SIZE=24, XLABEL_SIZE=36, YLABEL_SIZE=36, TITLE_SIZE=48, XTICK_SIZE=30, YTICK_SIZE=30):
     """Plots center of energy in eta or phi for the given dataset."""
+
     EMDs, Seps = {}, {}
     fig, ax = plt.subplots(row, col, figsize=(width * col, height * row), sharex=False, sharey=True, squeeze=False)
     
@@ -626,7 +626,7 @@ def plot_EC(list_hlfs, dataset, output_dir, particle, model_names,model_to_color
             Seps[f"{model_names[i]}_{key}"] = separation_power(counts_ref, counts_data, bins)
         
         configure_subplot(ax, out_idx, key, None, YLABEL_SIZE, XLABEL_SIZE, 
-                      YMAX, XTICK_SIZE, YTICK_SIZE, col,row)
+                      YMAX, XTICK_SIZE, YTICK_SIZE, col, row)
     
     lines_labels = [ax_.get_legend_handles_labels() for ax_ in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
@@ -662,11 +662,11 @@ def set_x_ticks_and_labels(ax, xy, dataset):
     ax.set_xlabel(xlabel, fontsize=16)  # Increase x-axis label size
     ax.tick_params(axis='both', which='major', labelsize=14)  # Increase tick size
 
-def plot_data_with_styles(ax, data, labels, markers, ls, xy, dataset,model_to_color_dict):
+def plot_data_with_styles(ax, data, labels, markers, ls, xy, dataset, model_to_color_dict):
     # Plotting data with markers and line styles
     for i in range(len(data)):
         color = model_to_color_dict.get(labels[i], 'black') 
-        ax.plot(data[i], marker=markers[i], linestyle=ls, label=labels[i],color=color)
+        ax.plot(data[i], marker=markers[i], linestyle=ls, label=labels[i], color=color)
 
     # Setting x-ticks and labels
     set_x_ticks_and_labels(ax, xy, dataset)
@@ -675,7 +675,7 @@ def plot_data_with_styles(ax, data, labels, markers, ls, xy, dataset,model_to_co
     ax.legend(fontsize=14)  # Increase legend font size
     ax.set_title(f'Mean Energy - {xy} Bins', fontsize=18)  # Increase title font size
     
-def draw_voxel_heatmap(corr_mat_gen, corr_mat_ref, name, output_dir,model_name):
+def draw_voxel_heatmap(corr_mat_gen, corr_mat_ref, name, output_dir, model_name):
     """
     Generates a PDF with side-by-side correlation heatmaps for two datasets.
     
@@ -707,7 +707,7 @@ def draw_voxel_heatmap(corr_mat_gen, corr_mat_ref, name, output_dir,model_name):
             axes[0].set_ylabel("Voxel in angular bins")
 
             # Plot for reference data
-            sns.heatmap(ref_mat, ax=axes[1], cmap="coolwarm", annot=False, cbar=True,vmin=0,vmax=1)
+            sns.heatmap(ref_mat, ax=axes[1], cmap="coolwarm", annot=False, cbar=True, vmin=0, vmax=1)
             axes[1].set_title(f"Geant4 Data: Layer {idx+1} and {idx+2}")
             axes[1].set_xlabel("Voxel in radial bins")
             axes[1].set_ylabel("Voxel in angular bins")
@@ -716,21 +716,22 @@ def draw_voxel_heatmap(corr_mat_gen, corr_mat_ref, name, output_dir,model_name):
             plt.tight_layout()
             pdf.savefig(fig)
             plt.close(fig)
-def draw_heatmap(correlation_matrix,name,output_dir,width=8,height=6,TITLE_SIZE=30
-                   ,XLABEL_SIZE=25,YLABEL_SIZE=25,LEGEND_SIZE=16,XTICK_SIZE=24,YTICK_SIZE=24,STEPSIZE=5,CBAR=True):
+def draw_heatmap(correlation_matrix, name, output_dir, width=8, height=6, TITLE_SIZE=30,
+                   XLABEL_SIZE=25, YLABEL_SIZE=25, LEGEND_SIZE=16, XTICK_SIZE=24, YTICK_SIZE=24, STEPSIZE=5, CBAR=True):
     
     """
     This is a simple function to fraw the heatmap for layer wise correlation
     """
+
     sns.set()  # Set seaborn style
     fig,ax = plt.subplots(figsize=(width, height))  # Set the figure size
     
     
-    sns.heatmap(correlation_matrix, ax=ax,annot=False, cmap='coolwarm', fmt='.2f',cbar=CBAR,vmin=0,vmax=1)
-    ax.set_xlabel('Layers',fontsize=XLABEL_SIZE)
-    ax.set_ylabel('Layers',fontsize=YLABEL_SIZE)
-    ax.tick_params(axis='x', rotation=90,labelsize=XTICK_SIZE)
-    ax.tick_params(axis='y', rotation=0,labelsize=YTICK_SIZE)
+    sns.heatmap(correlation_matrix, ax=ax,annot=False, cmap='coolwarm', fmt='.2f', cbar=CBAR, vmin=0, vmax=1)
+    ax.set_xlabel('Layers', fontsize=XLABEL_SIZE)
+    ax.set_ylabel('Layers', fontsize=YLABEL_SIZE)
+    ax.tick_params(axis='x', rotation=90, labelsize=XTICK_SIZE)
+    ax.tick_params(axis='y', rotation=0, labelsize=YTICK_SIZE)
    
     if CBAR:
         cbar = ax.collections[0].colorbar
@@ -738,7 +739,7 @@ def draw_heatmap(correlation_matrix,name,output_dir,width=8,height=6,TITLE_SIZE=
         cbar.ax.tick_params(labelsize=LEGEND_SIZE)
     plt.gca().invert_yaxis()
     
-    fig.savefig(name, bbox_inches='tight',dpi=350)  # Save the figure
+    fig.savefig(name, bbox_inches='tight', dpi=350)  # Save the figure
     # Show the heatmap
     save_path = os.path.join(output_dir, name)
     plt.savefig(save_path)
@@ -750,10 +751,10 @@ def plot_mean_energy(Showers, model_names, model_to_color_dict, dataset, output_
    
     if dataset == 2:
         a, r, l = 16, 9, 45
-        shape=[-1,45,16,9]
+        shape=[-1, 45, 16, 9]
     elif dataset == 3:
         a, r, l = 50, 18, 45
-        shape=[-1,45,50,18]
+        shape=[-1, 45, 50, 18]
     else:
         print("Not implemented yet!")
         return
@@ -770,24 +771,24 @@ def plot_mean_energy(Showers, model_names, model_to_color_dict, dataset, output_
     
     # Plot and save the angular bins plot
     fig_a, ax_a = plt.subplots(figsize=(10, 6))
-    plot_data_with_styles(ax_a, angular_bins, model_names, markers, ls, 'a', dataset,model_to_color_dict)
+    plot_data_with_styles(ax_a, angular_bins, model_names, markers, ls, 'a', dataset, model_to_color_dict)
     fig_a.savefig(f'{output_dir}/mean_energy_angular_bins_{dataset}_{particle}.pdf')
     
     # Plot and save the radial bins plot
     fig_r, ax_r = plt.subplots(figsize=(10, 6))
-    plot_data_with_styles(ax_r, radial_bins, model_names, markers, ls, 'r', dataset,model_to_color_dict)
+    plot_data_with_styles(ax_r, radial_bins, model_names, markers, ls, 'r', dataset, model_to_color_dict)
     fig_r.savefig(f'{output_dir}/mean_energy_radial_bins_{dataset}_{particle}.pdf')
     
     # Plot and save the z bins plot
     fig_z, ax_z = plt.subplots(figsize=(10, 6))
-    plot_data_with_styles(ax_z, z_bins, model_names, markers, ls, 'z', dataset,model_to_color_dict)
+    plot_data_with_styles(ax_z, z_bins, model_names, markers, ls, 'z', dataset, model_to_color_dict)
     fig_z.savefig(f'{output_dir}/mean_energy_z_bins_{dataset}_{particle}.pdf')
 
     # No need to show the plots, so I removed the plt.show()
     plt.tight_layout()
 
     
-def plot_frob_norm(frobs,name,model_names,output_dir,mode, model_to_color_dict):
+def plot_frob_norm(frobs, name, model_names, output_dir, mode, model_to_color_dict):
     
     colors = [model_to_color_dict.get(model, 'skyblue') for model in model_names]
     # Plotting frobenius norm as a bar_plot
@@ -808,7 +809,7 @@ def plot_frob_norm(frobs,name,model_names,output_dir,mode, model_to_color_dict):
     plt.savefig(save_path)
    
     
-def draw_plots_cfd(correlations,g_idx,name,model_names,out_dir,mode,model_to_color_dict):
+def draw_plots_cfd(correlations, g_idx, name, model_names, out_dir, mode, model_to_color_dict):
     frobs=[]
     re_models=[]
     corr_g=correlations[g_idx]
@@ -817,72 +818,73 @@ def draw_plots_cfd(correlations,g_idx,name,model_names,out_dir,mode,model_to_col
     #if plot=='heatmap':
     
     for i,corr in enumerate(correlations):
-        file_name='heatmap_'+model_names[i]+'_'+name
-        if mode=='voxel':
-            draw_voxel_heatmap(corr,correlations[g_idx],file_name,out_dir,model_names[i])
-        elif mode=='layer':
-            draw_heatmap(corr,file_name,output_dir=out_dir)
+        file_name = 'heatmap_' + model_names[i] + '_' + name
+        if mode == 'voxel':
+            draw_voxel_heatmap(corr, correlations[g_idx], file_name, out_dir, model_names[i])
+        elif mode == 'layer':
+            draw_heatmap(corr, file_name, output_dir=out_dir)
         else: 
             print("not implemented heatmap for grouped voxel")
                 
             
     #elif plot=='bar_plot':
     for i,corr in enumerate(correlations):
-        if i!=g_idx:
-            f=calculate_frob_norm(corr_g, corr)
+        if i != g_idx:
+            f = calculate_frob_norm(corr_g, corr)
             frobs.append(f)
             re_models.append(model_names[i])
-    plot_frob_norm(frobs,name, re_models,out_dir,mode,model_to_color_dict)
+    plot_frob_norm(frobs, name, re_models, out_dir, mode, model_to_color_dict)
 
     # else:
     #     print("will be updated later!")
-def calc_cfd(Showers, model_names, out_dir,dataset,model_to_color_dict):
+def calc_cfd(Showers, model_names, out_dir, dataset, model_to_color_dict):
     
-    g_idx=model_names.index('Geant4')
-    if dataset==2:
-        shape=[-1,45,16,9]
-    elif dataset==3:
-        shape=[-1,45,50,18]
+    g_idx = model_names.index('Geant4')
+    if dataset == 2:
+        shape = [-1, 45, 16, 9]
+    elif dataset == 3:
+        shape=[-1, 45, 50, 18]
     else:
         print('Not implemented yet for dataset 1 photon and pion')
         return
     
-    mode='voxel'
+    mode = 'voxel'
     ## looking at the correlation between the voxel j of layer i and the voxel j of layer i+1
-    correlations=[]
+    correlations = []
 
     for S in Showers:
         correlations.append(calculate_correlation_voxel(S.reshape(shape)))
-    fileName=str(dataset)+'_'+mode+'.pdf'
-    draw_plots_cfd(correlations,g_idx,fileName,model_names,out_dir,mode,model_to_color_dict)
+    fileName = str(dataset) + '_' + mode + '.pdf'
+    draw_plots_cfd(correlations, g_idx, fileName, model_names, out_dir, mode, model_to_color_dict)
 
-    mode='layer'
+    mode = 'layer'
     ## looking at the correlation between the layer i and layer i+1, considering their layer_sum
-    correlations=[]
+    correlations = []
     for S in Showers:
-        summ=S.reshape(shape).sum(axis=(2,3))
-        corr,_=calculate_correlation_layer(summ)
+        summ = S.reshape(shape).sum(axis=(2, 3))
+        corr, _ = calculate_correlation_layer(summ)
         correlations.append(corr)
-    fileName=str(dataset)+'_'+mode+'.pdf'    
-    draw_plots_cfd(correlations,g_idx,fileName,model_names,out_dir,mode,model_to_color_dict)
+    fileName = str(dataset) + '_' + mode + '.pdf'    
+    draw_plots_cfd(correlations, g_idx, fileName, model_names, out_dir, mode, model_to_color_dict)
 
-    mode='group'
+    mode = 'group'
     ## First create a group of layers by combining 5 consecutive layers, then sum along the axis of angular bins  and
     ## finally compute correlation between group i's radial_bin j with group i+1's radial_bin j
-    correlations=[]
+    correlations = []
 
     for S in Showers:
-        data=grouping_data(S.reshape(shape))
+        data = grouping_data(S.reshape(shape))
         correlations.append(calculate_correlation_group(data))
-    fileName=str(dataset)+'_'+mode+'.pdf'   
-    draw_plots_cfd(correlations,g_idx,fileName,model_names,out_dir,mode,model_to_color_dict)
+    fileName = str(dataset) + '_' + mode + '.pdf'   
+    draw_plots_cfd(correlations, g_idx, fileName, model_names, out_dir, mode, model_to_color_dict)
 
     
-def plot_E_group_layers(ref_model, hlf_classes, model_names, plot_filename, e_range, dataset_num,args,model_to_color_dict):
+def plot_E_group_layers(ref_model, hlf_classes, model_names, plot_filename, e_range, dataset_num, args, model_to_color_dict):
     """ plots energy deposited in 5 consecutive layers by creating a group of 5 layers"""
+
     # this is only applicable for dataset 2 and dataset 3. Dataset 1 does not need this
-    min_energy=0.5e-4/0.033
-    x_scale='log'
+    min_energy = 0.5e-4/0.033
+    x_scale = 'log'
     fig, axs = plt.subplots(3, 3, figsize=(15, 15))
     
     keys = [[i+j for j in range(5)] for i in range(0, 45, 5)]
@@ -892,8 +894,8 @@ def plot_E_group_layers(ref_model, hlf_classes, model_names, plot_filename, e_ra
 
     sep_powers_all = []
     layers_all = []
-    EMDs={}
-    Seps={}
+    EMDs = {}
+    Seps = {}
     for i, key in enumerate(keys):
         
         sep_powers = []
@@ -935,11 +937,11 @@ def plot_E_group_layers(ref_model, hlf_classes, model_names, plot_filename, e_ra
                 axs[i].set_xlabel(r'$E$ [GeV]')
                 axs[i].set_yscale('log')
                 axs[i].set_xscale('log')
-                emd_score=get_emd(ref_counts,model_counts)
-                EMDs[model+"_"+str(key)]=emd_score
+                emd_score = get_emd(ref_counts, model_counts)
+                EMDs[model + "_" + str(key)] = emd_score
 
                 seps = separation_power(ref_counts, model_counts, bins)
-                Seps[model+"_"+str(key)]=seps
+                Seps[model + "_" + str(key)] = seps
 
                 legend_names.append(model)
            
@@ -955,27 +957,25 @@ def plot_E_group_layers(ref_model, hlf_classes, model_names, plot_filename, e_ra
     plt.close()
     
     
-    new_path_emd=args.output_dir
-    emd_file=os.path.join(new_path_emd,
-                                    "emd_E_layer_dataset_{}_particle_{}.txt".format(dataset_num,args.particle_type))
+    new_path_emd = args.output_dir
+    emd_file = os.path.join(new_path_emd,
+                                    "emd_E_layer_dataset_{}_particle_{}.txt".format(dataset_num, args.particle_type))
     write_dict_to_txt(EMDs,emd_file)
-    new_path_sep=args.output_dir
-    sep_file=os.path.join(new_path_sep,
-                              "separation_E_layer_dataset_{}_particle_{}.txt".format(dataset_num,args.particle_type))
-    write_dict_to_txt(Seps,sep_file)
+    new_path_sep = args.output_dir
+    sep_file = os.path.join(new_path_sep,
+                              "separation_E_layer_dataset_{}_particle_{}.txt".format(dataset_num, args.particle_type))
+    write_dict_to_txt(Seps, sep_file)
     
     
-    taskname=f'separation_power_E_layer_{e_range}'
-    plot_sep_emd(sep_file, args.output_dir, dataset_num, args.particle_type,model_to_color_dict,width=7,height=5,taskname=taskname)
-    taskname=f'emd_score_E_layer_{e_range}'
-    plot_sep_emd(emd_file, args.output_dir, dataset_num, args.particle_type,model_to_color_dict,width=7,height=5,taskname=taskname)
+    taskname = f'separation_power_E_layer_{e_range}'
+    plot_sep_emd(sep_file, args.output_dir, dataset_num, args.particle_type, model_to_color_dict, width=7, height=5, taskname=taskname)
+    taskname = f'emd_score_E_layer_{e_range}'
+    plot_sep_emd(emd_file, args.output_dir, dataset_num, args.particle_type, model_to_color_dict, width=7, height=5, taskname=taskname)
     
-
-
     
-def plot_layers(args,model_to_color_dict,Showers, HLFs,Es,model_names):
+def plot_layers(args, model_to_color_dict, Showers, HLFs, Es, model_names):
   
-    target_energies = 10**np.linspace(3, 6, 4)
+    target_energies = 10 ** np.linspace(3, 6, 4)
     
     hlfs = dict()
     for model in model_names:
@@ -983,37 +983,30 @@ def plot_layers(args,model_to_color_dict,Showers, HLFs,Es,model_names):
 
     # plot energy ranges seperated
     for i in range(len(target_energies)-1):
-        for idx,model in enumerate(model_names):
+        for idx, model in enumerate(model_names):
 
-            energies, showers = Es[idx],Showers[idx]
-            
+            energies, showers = Es[idx], Showers[idx]
             
             shower_bins = ((energies >= target_energies[i]) & \
                              (energies < target_energies[i+1])).squeeze()
             hlfs[model].Einc = energies[shower_bins]
             hlfs[model].CalculateFeatures(showers[shower_bins])
             
-        e_range = str(int(target_energies[i]/1000))+'GeV_'+str(int(target_energies[i+1]/1000))+'GeV'
+        e_range = str(int(target_energies[i]/1000)) + 'GeV_' + str(int(target_energies[i+1]/1000)) + 'GeV'
         plot_filename =  'E_layers_dataset_{}_{}.pdf'.format(args.dataset_num, e_range)
         ref = 'Geant4'
-        plot_E_group_layers(ref, hlfs, model_names, plot_filename, e_range, args.dataset_num,args,model_to_color_dict)
-
-        
+        plot_E_group_layers(ref, hlfs, model_names, plot_filename, e_range, args.dataset_num, args, model_to_color_dict)
 
 
     # plot all energy ranges
     hlfs = dict()
     
-    for idx,model in enumerate(model_names):
-        hlfs[model]=HLFs[idx]
+    for idx, model in enumerate(model_names):
+        hlfs[model] = HLFs[idx]
     plot_filename =  'E_layers_dataset_{}_{}.pdf'.format(args.dataset_num, 'all')
     ref = 'Geant4'
     e_range = 'all'
-    plot_E_group_layers(ref, hlfs, model_names, plot_filename, e_range, args.dataset_num,args,model_to_color_dict)
+    plot_E_group_layers(ref, hlfs, model_names, plot_filename, e_range, args.dataset_num, args, model_to_color_dict)
 
     #print("done plotting...")
  
-    
-        
-        
-    
