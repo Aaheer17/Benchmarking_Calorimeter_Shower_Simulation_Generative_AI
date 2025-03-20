@@ -148,7 +148,7 @@ def main():
     elif args.metrics == 'CFD':
         Es, Showers, HLFs, model_names, files = initialize_HLFs(args.dataset_path, args.particle_type, args.binning_file)
         model_to_color_dict = create_model_to_color_dict(model_names)
-        calc_CFD(Showers, model_names, args.output_dir, args.dataset_num, model_to_color_dict)
+        calc_cfd(Showers, model_names, args.output_dir, args.dataset_num, model_to_color_dict)
         
     elif args.metrics == 'layer':
         plot_layers(args)
